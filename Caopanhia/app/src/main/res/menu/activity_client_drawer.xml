@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+
+    <item
+          android:id="@+id/navHome"
+          android:title="Página Inicial"
+          android:icon="@drawable/ic_action_home"
+    />
+
+
+    <group android:checkableBehavior ="single">
+        <item android:title="Opções">
+            <menu>
+                <item
+                    android:id="@+id/navPet"
+                    android:title="Meus cães"
+                    android:icon="@drawable/ic_action_pet"
+                    />
+                <item
+                    android:id="@+id/navAppointment"
+                    android:title="Minhas consultas"
+                    android:icon="@drawable/ic_action_appointment"
+                    />
+                <item
+                    android:id="@+id/navPackages"
+                    android:title="Minhas encomendas"
+                    android:icon="@drawable/ic_action_packages"
+                    />
+            </menu>
+        </item>
+    </group>
+
+    <item android:title="Mapas">
+        <menu>
+            <item
+                android:id="@+id/navMap"
+                android:title="Serviços"
+                android:icon="@drawable/ic_action_map"
+                />
+        </menu>
+    </item>
+
+
+</menu>
