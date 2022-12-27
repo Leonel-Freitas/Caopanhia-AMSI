@@ -16,10 +16,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO: estava a carregar a vista errada
         setContentView(R.layout.activity_login);
 
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
+     //   etEmail = findViewById(R.id.etEmail);
+      // etPassword = findViewById(R.id.etPassword);
     }
 
     private boolean emailValidation(String email){
