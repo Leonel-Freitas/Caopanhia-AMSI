@@ -26,6 +26,8 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        SingletonGestorCaopanhia.getInstance(this).setLoginListener(this);
+
     }
 
     private boolean emailValidation(String email){

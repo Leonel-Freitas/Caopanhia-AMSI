@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class HomeClientFragment extends Fragment {
 
@@ -27,7 +28,7 @@ public class HomeClientFragment extends Fragment {
     }
 
     public void onClickPetsList(View view) {
-        //TODO Ligação entre fragmentos
+
     }
 
     public void onClickAppointmentList(View view) {

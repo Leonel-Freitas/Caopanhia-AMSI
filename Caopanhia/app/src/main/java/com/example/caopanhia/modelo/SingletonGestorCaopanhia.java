@@ -32,8 +32,8 @@ public class SingletonGestorCaopanhia {
     private static SingletonGestorCaopanhia instance=null;
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
-    private static final String mUrlAPICaes="http://192.168.1.103/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/caes",
-            mUrlAPILogin="http://192.168.1.103/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/login/post";
+    private static final String mUrlAPICaes="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/caes",
+            mUrlAPILogin="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/login/post";
     private static final String TOKEN="TOKEN"; //a defenir
     private CaesListener caesListener;
     private DetalhesListener detalhesListener;
@@ -62,14 +62,16 @@ public class SingletonGestorCaopanhia {
     //Login Na API
 
     public void efetuarLoginAPI(String email, String  password){
-            StringRequest req = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
+            StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    System.out.println("Teste"+response);
                     //TODO: parse do que foi recebido no login
-                    try {
+                   try {
                         JSONObject json = new JSONObject(response);
-                        String token = json.getString("access_token");
-                        loginListener.onLoginSuccess(token);
+                        String token = json.getString("token");
+                        if(loginListener!=null){
+                        loginListener.onLoginSuccess(token);}
                     } catch (JSONException e) {
                         loginListener.onLoginError();
                     }
@@ -77,7 +79,9 @@ public class SingletonGestorCaopanhia {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    loginListener.onLoginError();
+                    //loginListener.onLoginError();
+                    System.out.println("TESTE-ERRO"+error.getMessage());
+
                 }
             }) {
                 @Override
@@ -88,7 +92,7 @@ public class SingletonGestorCaopanhia {
                     return params;
                 }
             };
-            volleyQueue.add(req);
+            volleyQueue.add(request);
             }
     
 
