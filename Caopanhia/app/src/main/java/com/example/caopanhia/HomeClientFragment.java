@@ -25,16 +25,4 @@ public class HomeClientFragment extends Fragment {
 
         return view;
     }
-
-    public void onClickPetsList(View view) {
-        //TODO Ligação entre fragmentos
-    }
-
-    public void onClickAppointmentList(View view) {
-        //TODO Ligação entre fragmentos
-    }
-
-    public void onClickPackagesList(View view) {
-        //TODO Ligação entre fragmentos
-    }
 }
