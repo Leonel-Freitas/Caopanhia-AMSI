@@ -76,6 +76,10 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
             case R.id.navMap:
                 Toast.makeText(this, "MAPA", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.navLogout:
+                //TODO LOGOUT
+                Toast.makeText(this, "LOGOUT", Toast.LENGTH_SHORT).show();
+                break;
         }
         if (fragment != null)
             fragmentManager.beginTransaction().replace(R.id.contentFragment, fragment).commit();

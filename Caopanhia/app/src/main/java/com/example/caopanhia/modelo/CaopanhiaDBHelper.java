@@ -25,7 +25,7 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
     // Nome dos campos da tabela dos caes
     private static final String NOME = "nome", ANO_NASCIMENTO = "ano_nascimento", GENERO = "genero", MICROSHIP = "microship", CASTRADO = "castrado";
     // Nome dos campos dos users
-    private static final String USERNAME = "username", PASSWORD = "password", EMAIL = "email";
+    private static final String USERNAME = "username", PASSWORD = "password", EMAIL = "email", TOKEN = "token";
 
     public CaopanhiaDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -51,7 +51,8 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
                         ID + " INTEGER PRIMARY KEY," +
                         USERNAME + " TEXT NOT NULL," +
                         PASSWORD + " TEXT NOT NULL," +
-                        EMAIL + " TEXT NOT NULL" + " )";
+                        EMAIL + " TEXT NOT NULL," +
+                        TOKEN + " TEXT NOT NULL" + " )";
 
         sqLiteDatabase.execSQL(sqlCreateTableUsers);
     }
@@ -139,6 +140,7 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
         values.put(USERNAME, user.getUsername());
         values.put(PASSWORD, user.getPassword());
         values.put(EMAIL, user.getEmail());
+        values.put(TOKEN, user.getToken());
 
         // devolve -1 em caso de erro, ou o id do novo cao (long)
         db.insert(TABLE_USERS, null, values);
@@ -162,7 +164,7 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst())
         {
             do {
-                User userAux = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
+                User userAux = new User(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
 
                 users.add(userAux);
             }while(cursor.moveToNext());
