@@ -43,5 +43,15 @@
         </menu>
     </item>
 
+    <item android:title="Sessão">
+        <menu>
+            <item
+                android:id="@+id/navLogout"
+                android:title="Sair"
+                android:icon="@drawable/ic_action_logout"
+                />
+        </menu>
+    </item>
+
 
 </menu>
