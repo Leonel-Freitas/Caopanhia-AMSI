@@ -6,48 +6,48 @@
 
     <item
           android:id="@+id/navHome"
-          android:title="Página Inicial"
+          android:title="@string/txt_menu_pagina_inicial"
           android:icon="@drawable/ic_action_home"
     />
 
 
     <group android:checkableBehavior ="single">
-        <item android:title="Opções">
+        <item android:title="@string/txt_opcoes">
             <menu>
                 <item
                     android:id="@+id/navPet"
-                    android:title="Meus cães"
+                    android:title="@string/txt_menu_caes"
                     android:icon="@drawable/ic_action_pet"
                     />
                 <item
                     android:id="@+id/navAppointment"
-                    android:title="Minhas consultas"
+                    android:title="@string/txt_menu_consultas"
                     android:icon="@drawable/ic_action_appointment"
                     />
                 <item
                     android:id="@+id/navPackages"
-                    android:title="Minhas encomendas"
+                    android:title="@string/txt_menu_encomendas"
                     android:icon="@drawable/ic_action_packages"
                     />
             </menu>
         </item>
     </group>
 
-    <item android:title="Mapas">
+    <item android:title="@string/txt_mapas">
         <menu>
             <item
                 android:id="@+id/navMap"
-                android:title="Serviços"
+                android:title="@string/txt_menu_servicos"
                 android:icon="@drawable/ic_action_map"
                 />
         </menu>
     </item>
 
-    <item android:title="Sessão">
+    <item android:title="@string/txt_sessao">
         <menu>
             <item
                 android:id="@+id/navLogout"
-                android:title="Sair"
+                android:title="@string/txt_sair"
                 android:icon="@drawable/ic_action_logout"
                 />
         </menu>
