@@ -9,6 +9,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,11 +26,23 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
     private NavigationView navigationView;
     private DrawerLayout drawer;
     private FragmentManager fragmentManager;
+    public static final String SHARED = "USER_TOKEN";
+    public static final String TOKEN = "TOKEN";
+    public static final String USERNAME = "USERNAME";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client_main);
+
+        String token = getIntent().getStringExtra(TOKEN);
+        if (token != null){
+            SharedPreferences userToken = getSharedPreferences(SHARED, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = userToken.edit();
+            editor.putString(TOKEN, token);
+            editor.apply();
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,9 +55,19 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
         toggle.syncState();
         drawer.addDrawerListener(toggle);
 
+        carregarCabecalho();
+
         navigationView.setNavigationItemSelectedListener(this);
         fragmentManager = getSupportFragmentManager();
         loadHomeFragment();
+    }
+
+    private void carregarCabecalho(){
+        String username = getIntent().getStringExtra(USERNAME);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView tvUsername = headerView.findViewById(R.id.tvUsername);
+        tvUsername.setText(username);
     }
 
     private boolean loadHomeFragment() {
@@ -77,8 +102,14 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
                 Toast.makeText(this, "MAPA", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.navLogout:
-                //TODO LOGOUT
-                Toast.makeText(this, "LOGOUT", Toast.LENGTH_SHORT).show();
+
+                SharedPreferences userToken = getSharedPreferences(SHARED, Context.MODE_PRIVATE);
+                userToken.edit().clear().apply(); //ou .commit()
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+
+
                 break;
         }
         if (fragment != null)
