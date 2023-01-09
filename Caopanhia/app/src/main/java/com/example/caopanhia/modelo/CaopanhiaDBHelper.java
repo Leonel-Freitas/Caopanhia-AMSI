@@ -99,10 +99,10 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
         return db.update(TABLE_CAES, values, ID+"=?", new String[]{String.valueOf(cao.getId())})==1;
     }
 
-    public boolean removerCaoDB(int id)
+    public boolean removerCaoDB(Cao cao)
     {
         // db.delete devolve o número de linhas eliminadas
-        return db.delete(TABLE_CAES, ID+"=?", new String[]{String.valueOf(id)})==1;
+        return db.delete(TABLE_CAES, ID+"=?",  new String[]{String.valueOf(cao.getId())})==1;
     }
 
     public void removerAllCaesDB()
