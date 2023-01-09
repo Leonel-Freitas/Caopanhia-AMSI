@@ -13,80 +13,42 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.2"/>
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.05"
             android:text="Bem-vindo,"
             android:textSize="30dp"
             android:textColor="@color/soft_brown"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.15"
             android:text="Username"
             android:textSize="30dp"
             android:textColor="@color/soft_brown"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textAlignment="center"/>
 
-        <Space
+
+
+        <ImageView
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.2"/>
+            android:layout_weight="0.6"
+            android:src="@drawable/client_home" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="0.2">
-
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.33"
-                android:src="@drawable/btn_caes_pessoais"
-                android:layout_margin="1dp"
-                android:onClick="onClickPetsList"/>
-
-            <ImageButton
-                android:id="@+id/imageButton2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.34"
-                android:src="@drawable/btn_consultas"
-                android:layout_margin="1dp"
-                android:onClick="onClickAppointmentList"/>
-
-            <ImageButton
-                android:id="@+id/imageButton3"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.33"
-                android:src="@drawable/btn_encomendas"
-                android:layout_margin="1dp"
-                android:onClick="onClickPackagesList"/>
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.2"/>
-
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.3" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.1"/>
     </LinearLayout>
 
 </FrameLayout>
