@@ -13,6 +13,8 @@ import com.example.caopanhia.listeners.LoginListener;
 import com.example.caopanhia.modelo.SingletonGestorCaopanhia;
 import com.example.caopanhia.utils.Utilities;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     private EditText etEmail, etPassword;
@@ -60,24 +62,39 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
         }else {
             SingletonGestorCaopanhia.getInstance(getApplicationContext()).efetuarLoginAPI(email, password);
         }
-        //TODO Verificar dados do login na API e separar cliente de vet
+
 
 
 
     }
 
     @Override
-    public void onLoginSuccess(String token) {
-        //TODO  Armazene o token de acesso em um arquivo de preferencias
+    public void onLoginSuccess(String token, String role, String username) {
+        if (Objects.equals(role, "client")){
         Intent intent = new Intent(this, ClientMainActivity.class);
-        //intent.putExtra("USERNAME", email); //TODO passar o username do utilizador
-        startActivity(intent);
-        finish();
+            intent.putExtra(ClientMainActivity.USERNAME, username);
+            intent.putExtra(ClientMainActivity.TOKEN, token);
+            startActivity(intent);
+            finish();
+        }else if (Objects.equals(role, "vet")){
+            Intent intent = new Intent(this, VetMainActivity.class);
+            intent.putExtra(VetMainActivity.USERNAME, username);
+            intent.putExtra(VetMainActivity.TOKEN, token);
+            startActivity(intent);
+            finish();
+        }else{
+            Toast.makeText(this, "Não tens permmissão para entrar na aplicação", Toast.LENGTH_SHORT).show();
+            etEmail.setText("");
+            etPassword.setText("");
+
+        }
 
     }
 
     @Override
     public void onLoginError() {
-        Toast.makeText(this, "Erro Login", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Credenciais erradas", Toast.LENGTH_SHORT).show();
+        etEmail.setText("");
+        etPassword.setText("");
     }
 }

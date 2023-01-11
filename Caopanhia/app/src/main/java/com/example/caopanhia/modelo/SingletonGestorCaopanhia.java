@@ -18,6 +18,7 @@ import com.example.caopanhia.listeners.DetalhesListener;
 import com.example.caopanhia.listeners.LoginListener;
 import com.example.caopanhia.utils.CaoJsonParser;
 import com.example.caopanhia.utils.Utilities;
+import com.google.android.gms.common.internal.Objects;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,9 +33,10 @@ public class SingletonGestorCaopanhia {
     private static SingletonGestorCaopanhia instance=null;
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
-    private static final String mUrlAPICaes="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/caes",
+    private static String TOKEN="";
+    private static final String mUrlAPICaes="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/caes?access-token=" + TOKEN,
             mUrlAPILogin="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/login/post";
-    private static final String TOKEN="TOKEN"; //a defenir
+
     private CaesListener caesListener;
     private DetalhesListener detalhesListener;
     private LoginListener loginListener;
@@ -66,12 +68,17 @@ public class SingletonGestorCaopanhia {
                 @Override
                 public void onResponse(String response) {
                     System.out.println("Teste"+response);
-                    //TODO: parse do que foi recebido no login
                    try {
                         JSONObject json = new JSONObject(response);
                         String token = json.getString("token");
+                        String role = json.getString("role");
+                        TOKEN = token;
+                        String username = json.getString("username");
                         if(loginListener!=null){
-                        loginListener.onLoginSuccess(token);}
+                        loginListener.onLoginSuccess(token, role, username);
+                        TOKEN = token;
+                            System.out.println(mUrlAPICaes);
+                        }
                     } catch (JSONException e) {
                         loginListener.onLoginError();
                     }
@@ -81,6 +88,7 @@ public class SingletonGestorCaopanhia {
                 public void onErrorResponse(VolleyError error) {
                     //loginListener.onLoginError();
                     System.out.println("TESTE-ERRO"+error.getMessage());
+                    loginListener.onLoginError();
 
                 }
             }) {
