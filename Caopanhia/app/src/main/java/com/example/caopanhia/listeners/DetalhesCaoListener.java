@@ -1,5 +1,5 @@
 package com.example.caopanhia.listeners;
 
-public interface DetalhesListener {
+public interface DetalhesCaoListener {
     void onRefreshDetalhes(int operacao);
 }

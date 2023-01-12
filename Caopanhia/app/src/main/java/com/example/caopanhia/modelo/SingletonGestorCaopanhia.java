@@ -1,6 +1,7 @@
 package com.example.caopanhia.modelo;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -14,7 +15,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.caopanhia.ClientMainActivity;
 import com.example.caopanhia.listeners.CaesListener;
-import com.example.caopanhia.listeners.DetalhesListener;
+import com.example.caopanhia.listeners.DetalhesCaoListener;
 import com.example.caopanhia.listeners.LoginListener;
 import com.example.caopanhia.utils.CaoJsonParser;
 import com.example.caopanhia.utils.Utilities;
@@ -33,12 +34,12 @@ public class SingletonGestorCaopanhia {
     private static SingletonGestorCaopanhia instance=null;
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
-    private static String TOKEN="";
-    private static final String mUrlAPICaes="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/caes?access-token=" + TOKEN,
-            mUrlAPILogin="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/login/post";
+    //private static String TOKEN="h-thDu-IuI4_MZ7D5iABfLvrLaEFaFMD";
+    private static final String mUrlAPICaes="http://10.0.2.2/caopanhia/backend/web/api/caes/",
+            mUrlAPILogin="http://10.0.2.2/caopanhia/backend/web/api/login/post";
 
     private CaesListener caesListener;
-    private DetalhesListener detalhesListener;
+    private DetalhesCaoListener detalhesCaoListener;
     private LoginListener loginListener;
 
     //1.2.2.Devem criar um atributo livrosBD do tipo CaoBDHelper;
@@ -72,12 +73,10 @@ public class SingletonGestorCaopanhia {
                         JSONObject json = new JSONObject(response);
                         String token = json.getString("token");
                         String role = json.getString("role");
-                        TOKEN = token;
                         String username = json.getString("username");
+                        int id_user = json.getInt("id_user");
                         if(loginListener!=null){
-                        loginListener.onLoginSuccess(token, role, username);
-                        TOKEN = token;
-                            System.out.println(mUrlAPICaes);
+                        loginListener.onLoginSuccess(token, role, username, id_user);
                         }
                     } catch (JSONException e) {
                         loginListener.onLoginError();
@@ -109,27 +108,14 @@ public class SingletonGestorCaopanhia {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     //region Caes
 
     public void setCaesListener(CaesListener caesListener){
           this.caesListener = caesListener;
       }
 
-      public void setDetalhesListener(DetalhesListener detalhesListener) {
-        this.detalhesListener = detalhesListener;
+      public void setDetalhesCaoListener(DetalhesCaoListener detalhesCaoListener) {
+        this.detalhesCaoListener = detalhesCaoListener;
      }
 
       public ArrayList<Cao> CaesBD() {
@@ -189,7 +175,7 @@ public class SingletonGestorCaopanhia {
                 public void onResponse(String response) {
                     adicionarCaoBD(CaoJsonParser.parserJasonCao(response));
 
-                    if(detalhesListener!=null){
+                    if(detalhesCaoListener!=null){
                         //detalhesListener.onRefreshDetalhes(ClientMainActivity.ADD);
                     }
                 }
@@ -203,7 +189,7 @@ public class SingletonGestorCaopanhia {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params=new HashMap<>();
-                    params.put("token", TOKEN);
+                   // params.put("token", TOKEN);
                     params.put("Nome", cao.getNome());
                     params.put("Ano Nascimento", String.valueOf(cao.getAnoNascimento()));
                     params.put("Genero", cao.getGenero());
@@ -224,7 +210,11 @@ public class SingletonGestorCaopanhia {
                 caesListener.onRefreachListaCaes(caopanhiaDB.getAllCaesDB());
             }
         }else{
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICaes, null, new Response.Listener<JSONArray>() {
+            SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
+            String token = userToken.getString(ClientMainActivity.TOKEN, "");
+            System.out.println("pedido: "+mUrlAPICaes+"caespessoais/"+id_user+"?access-token="+token);
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICaes+"caespessoais/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     caes = CaoJsonParser.parserJasonCao(response);
@@ -244,6 +234,7 @@ public class SingletonGestorCaopanhia {
         }
     }
 
+
     public void removerCaoAPI(final Cao livro, final Context context){
         if(!Utilities.isConnectionInternet(context)){
             Toast.makeText(context, "Erro: Sem ligação à internet!", Toast.LENGTH_LONG).show();
@@ -253,7 +244,7 @@ public class SingletonGestorCaopanhia {
                 public void onResponse(String response) {
                     removerCaoDB(livro.getId());
 
-                    if(detalhesListener!=null){
+                    if(detalhesCaoListener!=null){
                         //detalhesListener.onRefreshDetalhes(MenuMainActivity.DELETE);
                     }
                 }
@@ -276,7 +267,7 @@ public class SingletonGestorCaopanhia {
                 public void onResponse(String response) {
                     editarCaoDB(cao);
 
-                    if(detalhesListener!=null){
+                    if(detalhesCaoListener!=null){
                         //detalhesListener.onRefreshDetalhes(MenuMainActivity.EDIT);
                     }
                 }
@@ -289,7 +280,7 @@ public class SingletonGestorCaopanhia {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params=new HashMap<>();
-                    params.put("token", TOKEN);
+                   // params.put("token", TOKEN);
                     params.put("Nome", cao.getNome());
                     params.put("Ano Nascimento", String.valueOf(cao.getAnoNascimento()));
                     params.put("Genero", cao.getGenero());

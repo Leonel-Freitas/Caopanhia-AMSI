@@ -15,6 +15,7 @@ public class VetMainActivity extends AppCompatActivity {
     private TextView tvUsernameVet;
     public static final String SHARED = "USER_TOKEN";
     public static final String TOKEN = "TOKEN";
+    public static final String ID_USER = "ID_USER";
     public static final String USERNAME = "USERNAME";
 
 

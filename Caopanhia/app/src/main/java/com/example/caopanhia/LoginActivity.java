@@ -69,16 +69,18 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
     }
 
     @Override
-    public void onLoginSuccess(String token, String role, String username) {
+    public void onLoginSuccess(String token, String role, String username, int id_user) {
         if (Objects.equals(role, "client")){
         Intent intent = new Intent(this, ClientMainActivity.class);
             intent.putExtra(ClientMainActivity.USERNAME, username);
+            intent.putExtra(ClientMainActivity.ID_USER, id_user);
             intent.putExtra(ClientMainActivity.TOKEN, token);
             startActivity(intent);
             finish();
         }else if (Objects.equals(role, "vet")){
             Intent intent = new Intent(this, VetMainActivity.class);
             intent.putExtra(VetMainActivity.USERNAME, username);
+            intent.putExtra(VetMainActivity.ID_USER, id_user);
             intent.putExtra(VetMainActivity.TOKEN, token);
             startActivity(intent);
             finish();

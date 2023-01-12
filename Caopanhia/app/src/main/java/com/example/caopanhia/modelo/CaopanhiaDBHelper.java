@@ -32,6 +32,7 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
         db = getWritableDatabase();
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String sqlCreateTableCaes =

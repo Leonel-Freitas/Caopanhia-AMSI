@@ -29,6 +29,9 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
     public static final String SHARED = "USER_TOKEN";
     public static final String TOKEN = "TOKEN";
     public static final String USERNAME = "USERNAME";
+    public static final String ID_USER = "ID_USER";
+    public static final String OPERACAO = "OPERACAO";
+    public static final int ADD = 10, EDIT = 20, DELETE = 30;
 
 
     @Override
@@ -37,10 +40,12 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
         setContentView(R.layout.activity_client_main);
 
         String token = getIntent().getStringExtra(TOKEN);
+        int id_user = getIntent().getIntExtra(ID_USER, 0);
         if (token != null){
             SharedPreferences userToken = getSharedPreferences(SHARED, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = userToken.edit();
             editor.putString(TOKEN, token);
+            editor.putInt(ID_USER, id_user);
             editor.apply();
         }
 
