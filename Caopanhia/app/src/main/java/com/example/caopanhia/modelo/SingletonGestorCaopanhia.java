@@ -18,7 +18,9 @@ import com.example.caopanhia.PetsListFragment;
 import com.example.caopanhia.listeners.CaesListener;
 import com.example.caopanhia.listeners.DetalhesCaoListener;
 import com.example.caopanhia.listeners.LoginListener;
+import com.example.caopanhia.listeners.MarcacaoListener;
 import com.example.caopanhia.utils.CaoJsonParser;
+import com.example.caopanhia.utils.MarcacaoParser;
 import com.example.caopanhia.utils.Utilities;
 import com.google.android.gms.common.internal.Objects;
 
@@ -32,15 +34,17 @@ import java.util.Map;
 
 public class SingletonGestorCaopanhia {
     private ArrayList<Cao> caes;
+    private ArrayList<MarcacaoVeterinaria> marcacoes;
     private static SingletonGestorCaopanhia instance=null;
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
     //private static String TOKEN="h-thDu-IuI4_MZ7D5iABfLvrLaEFaFMD";
-    private static final String mUrlAPICaes="http://10.0.2.2/caopanhia/backend/web/api/caes",
-            mUrlAPILogin="http://10.0.2.2/caopanhia/backend/web/api/login/post";
+    private static final String mUrlAPICaes="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/caes",
+            mUrlAPILogin="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/login/post";
 
     private CaesListener caesListener;
     private DetalhesCaoListener detalhesCaoListener;
+    private MarcacaoListener marcacaoListener;
     private LoginListener loginListener;
 
     public static synchronized SingletonGestorCaopanhia getInstance(Context context){
@@ -53,7 +57,12 @@ public class SingletonGestorCaopanhia {
 
     private SingletonGestorCaopanhia(Context context){
         caes = new ArrayList<>();
+        marcacoes = new ArrayList<>();
         caopanhiaDB = new CaopanhiaDBHelper(context);
+    }
+
+    public void setMarcacoesListener(MarcacaoListener marcacoesListener){
+        this.marcacaoListener = marcacoesListener;
     }
 
     public void setLoginListener(LoginListener loginListener) {
@@ -293,4 +302,68 @@ public class SingletonGestorCaopanhia {
 
 
     //endregion
+
+    //region Marcaçoes
+
+
+
+    public ArrayList<MarcacaoVeterinaria> MarcacaoBD() {
+        marcacoes = caopanhiaDB.getAllMarcacoesDB();
+        return new ArrayList(marcacoes);
+    }
+
+    public MarcacaoVeterinaria getMarcacao(int id){
+        for(MarcacaoVeterinaria m:marcacoes){
+            if(m.getId()==id){
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public void adicionarMarcacaoBD(ArrayList<MarcacaoVeterinaria> Marcacoes){
+        caopanhiaDB.removerAllMarcacoesDB();
+        for(MarcacaoVeterinaria m :marcacoes) {
+            adicionarMarcacaoBD(m);
+        }
+    }
+
+    public void adicionarMarcacaoBD(MarcacaoVeterinaria m){
+        caopanhiaDB.adicionarMarcacao(m);
+    }
+
+    //endregion
+
+    //region MarcaçoesAPI
+
+    public void getAllMarcacoesAPI(final Context context){
+        if(!Utilities.isConnectionInternet(context)){
+            Toast.makeText(context, "Sem ligação à internet!", Toast.LENGTH_LONG).show();
+
+            if(marcacaoListener!=null){
+                marcacaoListener.onRefreshListaMarcacoes(caopanhiaDB.getAllMarcacoesDB());
+            }
+        }else{
+            SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
+            String token = userToken.getString(ClientMainActivity.TOKEN, "");
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICaes+"/marcacoesveterinarias/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    marcacoes = MarcacaoParser.parseJasonMarcacao(response);
+                    adicionarMarcacaoBD(marcacoes);
+
+                    if(marcacaoListener!=null){
+                        marcacaoListener.onRefreshListaMarcacoes(marcacoes);
+                    }
+                }
+            }, new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
 }

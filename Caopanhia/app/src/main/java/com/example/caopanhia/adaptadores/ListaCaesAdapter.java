@@ -60,7 +60,7 @@ public class ListaCaesAdapter extends BaseAdapter {
         return view;
     }
 
-    private class ViewHolderLista{
+    class ViewHolderLista{
         private TextView tvNome, tvAnoNascimento;
 
         public ViewHolderLista(View view){

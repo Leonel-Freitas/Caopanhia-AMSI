@@ -17,6 +17,7 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
 
     private static final String TABLE_CAES = "caes";
     private static final String TABLE_USERS = "users";
+    private static final String TABLE_MARCACAO = "marcacao";
 
 
     // Nome dos campos comuns entre as tabelas
@@ -26,6 +27,8 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
     private static final String NOME = "nome", ANO_NASCIMENTO = "ano_nascimento", ID_USER_PROFILE = "id_user_profile", GENERO = "genero", MICROSHIP = "microship", CASTRADO = "castrado", ADOTADO = "adotado";
     // Nome dos campos dos users
     private static final String USERNAME = "username", PASSWORD = "password", EMAIL = "email", TOKEN = "token";
+    // Nome dos campos dos Marcações
+    private static final String  DATA = "data",HORA = "hora", VET = "vet", CAO = "cao";
 
     public CaopanhiaDBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -56,17 +59,29 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
                         PASSWORD + " TEXT NOT NULL," +
                         EMAIL + " TEXT NOT NULL," +
                         TOKEN + " TEXT NOT NULL" + " )";
-
         sqLiteDatabase.execSQL(sqlCreateTableUsers);
+
+        String sqlCreateTableMarcacao =
+                "CREATE TABLE " + TABLE_MARCACAO + "( " +
+                        ID + " INTEGER PRIMARY KEY," +
+                        DATA + " TEXT NOT NULL," +
+                        HORA + " TEXT NOT NULL," +
+                        VET + " TEXT NOT NULL," +
+                        CAO + " TEXT NOT NULL" + " )" ;
+
+        sqLiteDatabase.execSQL(sqlCreateTableMarcacao);
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         String sqlDropTableCaes = "DROP TABLE IF EXISTS " + TABLE_CAES;
         String sqlDropTableUsers = "DROP TABLE IF EXISTS " + TABLE_USERS;
+        String sqlDropTableMarcacao = "DROP TABLE IF EXISTS " + TABLE_MARCACAO;
 
         sqLiteDatabase.execSQL(sqlDropTableCaes);
         sqLiteDatabase.execSQL(sqlDropTableUsers);
+        sqLiteDatabase.execSQL(sqlDropTableMarcacao);
 
         onCreate(sqLiteDatabase);
     }
@@ -182,4 +197,46 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
 
     //endregion
 
+
+    //endregion
+
+    //region MarcacaoVeterinaria
+
+    public MarcacaoVeterinaria adicionarMarcacao(MarcacaoVeterinaria marcacao)
+    {
+        ContentValues values = new ContentValues();
+        values.put(ID, marcacao.getId());
+        values.put(DATA, marcacao.getData());
+        values.put(HORA, marcacao.getHora());
+        values.put(VET, marcacao.getVet());
+        values.put(CAO, marcacao.getCao());
+
+        db.insert(TABLE_MARCACAO, null, values);
+
+        return marcacao;
+    }
+
+    public void removerAllMarcacoesDB()
+    {
+        db.delete(TABLE_MARCACAO, null, null);
+    }
+
+    public ArrayList<MarcacaoVeterinaria> getAllMarcacoesDB()
+    {
+        ArrayList<MarcacaoVeterinaria> marcacoes = new ArrayList<>();
+
+        Cursor cursor = db.query(TABLE_MARCACAO, new String[]{DATA, HORA, VET, CAO,  ID},
+                null, null, null, null, null);
+
+        if(cursor.moveToFirst())
+        {
+            do {
+                MarcacaoVeterinaria marcacaoAux = new MarcacaoVeterinaria(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+
+                marcacoes.add(marcacaoAux);
+            }while(cursor.moveToNext());
+            cursor.close();
+        }
+        return marcacoes;
+    }
 }
