@@ -23,7 +23,7 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
     private static final String ID = "id";
 
     // Nome dos campos da tabela dos caes
-    private static final String NOME = "nome", ANO_NASCIMENTO = "ano_nascimento", GENERO = "genero", MICROSHIP = "microship", CASTRADO = "castrado";
+    private static final String NOME = "nome", ANO_NASCIMENTO = "ano_nascimento", ID_USER_PROFILE = "id_user_profile", GENERO = "genero", MICROSHIP = "microship", CASTRADO = "castrado", ADOTADO = "adotado";
     // Nome dos campos dos users
     private static final String USERNAME = "username", PASSWORD = "password", EMAIL = "email", TOKEN = "token";
 
@@ -40,9 +40,11 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
                         ID + " INTEGER PRIMARY KEY," +
                         NOME + " TEXT NOT NULL," +
                         ANO_NASCIMENTO + " INTEGER NOT NULL," +
+                        ID_USER_PROFILE + " INTEGER NOT NULL," +
                         GENERO + " TEXT NOT NULL," +
                         MICROSHIP + " TEXT NOT NULL," +
-                        CASTRADO + " TEXT NOT NULL" + " )";
+                        CASTRADO + " TEXT NOT NULL," +
+                        ADOTADO + " TEXT NOT NULL" + " )";
 
         sqLiteDatabase.execSQL(sqlCreateTableCaes);
 
@@ -77,9 +79,11 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
         values.put(ID, cao.getId());
         values.put(NOME, cao.getNome());
         values.put(ANO_NASCIMENTO, cao.getAnoNascimento());
+        values.put(ID_USER_PROFILE, cao.getIdUserProfile());
         values.put(GENERO, cao.getGenero());
         values.put(MICROSHIP, cao.getMicroship());
         values.put(CASTRADO, cao.getCastrado());
+        values.put(ADOTADO, cao.getAdotado());
 
         // devolve -1 em caso de erro, ou o id do novo cao (long)
         db.insert(TABLE_CAES, null, values);
@@ -92,9 +96,11 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(NOME, cao.getNome());
         values.put(ANO_NASCIMENTO, cao.getAnoNascimento());
+        values.put(ID_USER_PROFILE, cao.getIdUserProfile());
         values.put(GENERO, cao.getGenero());
         values.put(MICROSHIP, cao.getMicroship());
         values.put(CASTRADO, cao.getCastrado());
+        values.put(ADOTADO, cao.getAdotado());
 
         // devolve o número de linhas atualizadas
         return db.update(TABLE_CAES, values, ID+"=?", new String[]{String.valueOf(cao.getId())})==1;
@@ -115,13 +121,13 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
     {
         ArrayList<Cao> caes = new ArrayList<>();
 
-        Cursor cursor = db.query(TABLE_CAES, new String[]{NOME, ANO_NASCIMENTO, GENERO, MICROSHIP, CASTRADO, ID},
+        Cursor cursor = db.query(TABLE_CAES, new String[]{NOME, ANO_NASCIMENTO, ID_USER_PROFILE, GENERO, MICROSHIP, CASTRADO, ADOTADO, ID},
                 null, null, null, null, null);
 
         if(cursor.moveToFirst())
         {
             do {
-                Cao caoAux = new Cao(cursor.getInt(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
+                Cao caoAux = new Cao(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
 
                  caes.add(caoAux);
             }while(cursor.moveToNext());

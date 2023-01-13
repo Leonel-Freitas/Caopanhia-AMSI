@@ -21,12 +21,14 @@ public class CaoJsonParser {
                 JSONObject cao = (JSONObject) response.get(i);
                 int id = cao.getInt("id");
                 int anoNascimento = Integer.parseInt(cao.getString("anoNascimento"));
+                int id_user_profile = cao.getInt("idUserProfile");
                 String nome = cao.getString("nome");
                 String genero = cao.getString("genero");
                 String microship = cao.getString("microship");
                 String castrado = cao.getString("castrado");
+                String adotado = cao.getString("adotado");
 
-                Cao auxcao = new Cao(id, anoNascimento, nome, genero, microship, castrado);
+                Cao auxcao = new Cao(id, anoNascimento, id_user_profile, nome, genero, microship, castrado, adotado);
                 caes.add(auxcao);
             }
         }catch (JSONException e){
@@ -43,13 +45,15 @@ public class CaoJsonParser {
             JSONObject cao = new JSONObject(response);
             int id = cao.getInt("id");
             int anoNascimento = Integer.parseInt(cao.getString("anoNascimento"));
+            int id_user_profile = cao.getInt("idUserProfile");
             String nome = cao.getString("nome");
             String genero = cao.getString("genero");
             String microship = cao.getString("microship");
             String castrado = cao.getString("castrado");
+            String adotado = cao.getString("adotado");
 
 
-            auxcao = new Cao(id, anoNascimento, nome, genero, microship, castrado);
+            auxcao = new Cao(id, anoNascimento, id_user_profile, nome, genero, microship, castrado, adotado);
         }catch (JSONException e){
             e.printStackTrace();
         }

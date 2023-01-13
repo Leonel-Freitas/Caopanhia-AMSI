@@ -1,4 +1,5 @@
 <resources>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="app_name">Caopanhia</string>
     <string name="txt_email_login">Insira o seu email</string>
     <string name="txt_password_login">Insira a sua palavra chave</string>
@@ -6,8 +7,6 @@
     <string name="txt_sem_conta">Se não possuir conta, registe-se em www.caopanhia.com</string>
     <string name="ndOpen">Open</string>
     <string name="ndClose">Close</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_caopanhia">CÃOPANHIA</string>
     <string name="txt_bem_vindo">Bem-vindo</string>
     <string name="txt_username">Username</string>
@@ -25,4 +24,16 @@
     <string name="txt_menu_servicos">Serviços</string>
     <string name="txt_sessao">Sessão</string>
     <string name="txt_dr">Dr.</string>
+    <string name="act_Nome">Detalhes:%1$s</string>
+    <string name="txt_present_nome">Nome:</string>
+    <string name="txt_nome">Nome</string>
+    <string name="txt_present_anoNascimento">Ano de Nascimento:</string>
+    <string name="txt_anoNascimento">Ano de nascimento</string>
+    <string name="txt_present_genero">Genero:</string>
+    <string name="txt_genero">Genero</string>
+    <string name="txt_present_microship">Microship:</string>
+    <string name="txt_microship">Microship</string>
+    <string name="txt_present_castrado">Castrado:</string>
+    <string name="txt_castrado">Castrado</string>
+    <string name="txt_default_nome_cao">NomeCao</string>
 </resources>

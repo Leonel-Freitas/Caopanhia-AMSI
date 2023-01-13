@@ -4,17 +4,19 @@ public class Cao {
 
     private int id;
     private int anoNascimento;
-    private String nome, genero, microship, castrado;
-    //private String imagem;
+    private int idUserProfile;
+    private String nome, genero, microship, castrado, adotado;
 
 
-    public Cao(int id, int anoNascimento, String nome, String genero, String microship, String castrado) {
+    public Cao(int id, int anoNascimento, int idUserProfile, String nome, String genero, String microship, String castrado, String adotado) {
         this.id = id;
         this.anoNascimento = anoNascimento;
+        this.idUserProfile = idUserProfile;
         this.nome = nome;
         this.genero = genero;
         this.microship = microship;
         this.castrado = castrado;
+        this.adotado = adotado;
     }
 
     public int getId() {
@@ -31,6 +33,14 @@ public class Cao {
 
     public void setAnoNascimento(int anoNascimento) {
         this.anoNascimento = anoNascimento;
+    }
+
+    public int getIdUserProfile() {
+        return idUserProfile;
+    }
+
+    public void setIdUserProfile(int idUserProfile) {
+        this.idUserProfile = idUserProfile;
     }
 
     public String getNome() {
@@ -63,5 +73,13 @@ public class Cao {
 
     public void setCastrado(String castrado) {
         this.castrado = castrado;
+    }
+
+    public String getAdotado() {
+        return adotado;
+    }
+
+    public void setAdotado(String adotado) {
+        this.adotado = adotado;
     }
 }

@@ -14,6 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.caopanhia.ClientMainActivity;
+import com.example.caopanhia.PetsListFragment;
 import com.example.caopanhia.listeners.CaesListener;
 import com.example.caopanhia.listeners.DetalhesCaoListener;
 import com.example.caopanhia.listeners.LoginListener;
@@ -35,14 +36,13 @@ public class SingletonGestorCaopanhia {
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
     //private static String TOKEN="h-thDu-IuI4_MZ7D5iABfLvrLaEFaFMD";
-    private static final String mUrlAPICaes="http://10.0.2.2/caopanhia/backend/web/api/caes/",
+    private static final String mUrlAPICaes="http://10.0.2.2/caopanhia/backend/web/api/caes",
             mUrlAPILogin="http://10.0.2.2/caopanhia/backend/web/api/login/post";
 
     private CaesListener caesListener;
     private DetalhesCaoListener detalhesCaoListener;
     private LoginListener loginListener;
 
-    //1.2.2.Devem criar um atributo livrosBD do tipo CaoBDHelper;
     public static synchronized SingletonGestorCaopanhia getInstance(Context context){
         if(instance == null){
             instance = new SingletonGestorCaopanhia(context);
@@ -51,10 +51,8 @@ public class SingletonGestorCaopanhia {
         return instance;
     }
 
-    //3.3. No SingletonGestorCaos adicione os seguintes livros no gerarDadosDinamico():
     private SingletonGestorCaopanhia(Context context){
         caes = new ArrayList<>();
-        //1.2.3. No construtor, devem iniciar a instância do CaoBDHelper, deixando de usar o método gerarDadosDinamico();
         caopanhiaDB = new CaopanhiaDBHelper(context);
     }
 
@@ -62,13 +60,21 @@ public class SingletonGestorCaopanhia {
         this.loginListener = loginListener;
     }
 
-    //Login Na API
+    public void setCaesListener(CaesListener caesListener){
+        this.caesListener = caesListener;
+    }
+
+    public void setDetalhesCaoListener(DetalhesCaoListener detalhesCaoListener) {
+        this.detalhesCaoListener = detalhesCaoListener;
+    }
+
+
+    //region Login Na API
 
     public void efetuarLoginAPI(String email, String  password){
             StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    System.out.println("Teste"+response);
                    try {
                         JSONObject json = new JSONObject(response);
                         String token = json.getString("token");
@@ -85,8 +91,6 @@ public class SingletonGestorCaopanhia {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    //loginListener.onLoginError();
-                    System.out.println("TESTE-ERRO"+error.getMessage());
                     loginListener.onLoginError();
 
                 }
@@ -101,32 +105,19 @@ public class SingletonGestorCaopanhia {
             };
             volleyQueue.add(request);
             }
-    
 
-
-
+    //endregion
 
 
 
     //region Caes
 
-    public void setCaesListener(CaesListener caesListener){
-          this.caesListener = caesListener;
-      }
-
-      public void setDetalhesCaoListener(DetalhesCaoListener detalhesCaoListener) {
-        this.detalhesCaoListener = detalhesCaoListener;
-     }
 
       public ArrayList<Cao> CaesBD() {
          caes = caopanhiaDB.getAllCaesDB();
          return new ArrayList(caes);
      }
 
-    //8.2.1. Para aceder de forma correta ao livro selecionado, deve implementar o método Cao getCao(int idCao)
-    //na classe SingletonGestorCaos.
-    //8.2.2. Para passar o id do livro selecionado para a nova atividade, necessita criar nessa classe uma constante
-    //que servirá de chave ao bundle Extra do intent.
     public Cao getCao(int id){
         for(Cao c:caes){
             if(c.getId()==id){
@@ -136,8 +127,7 @@ public class SingletonGestorCaopanhia {
         return null;
     }
 
-    // 1.2.4. Após isso, devem alterar os métodos adicionarCao, removerCao, editarCao e getCaos, renomeando-os para
-    // adicionarCaoBD, removerCaoBD, editarCaoBD e getCaosBD, de modo a utilizar os métodos da base de dados;
+
     public void adicionarCaoBD(ArrayList<Cao> Caes){
         caopanhiaDB.removerAllCaesDB();
         for(Cao c :caes) {
@@ -166,62 +156,25 @@ public class SingletonGestorCaopanhia {
     //endregion
 
     //region Caes_API
-    public void adicionarCaesAPI(final Cao cao, final Context context){
-        if(!Utilities.isConnectionInternet(context)){
-            Toast.makeText(context, "Erro: Sem ligação à internet!", Toast.LENGTH_LONG).show();
-        }else{
-            StringRequest req = new StringRequest(Request.Method.POST, mUrlAPICaes, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    adicionarCaoBD(CaoJsonParser.parserJasonCao(response));
-
-                    if(detalhesCaoListener!=null){
-                        //detalhesListener.onRefreshDetalhes(ClientMainActivity.ADD);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }){
-
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params=new HashMap<>();
-                   // params.put("token", TOKEN);
-                    params.put("Nome", cao.getNome());
-                    params.put("Ano Nascimento", String.valueOf(cao.getAnoNascimento()));
-                    params.put("Genero", cao.getGenero());
-                    params.put("Microship", cao.getMicroship());
-                    params.put("Castrado", cao.getCastrado());
-                    return params;
-                }
-            };
-            volleyQueue.add(req);
-        }
-    }
-
     public void getAllCaesAPI(final Context context){
         if(!Utilities.isConnectionInternet(context)){
             Toast.makeText(context, "Sem ligação à internet!", Toast.LENGTH_LONG).show();
 
             if(caesListener!=null){
-                caesListener.onRefreachListaCaes(caopanhiaDB.getAllCaesDB());
+                caesListener.onRefreshListaCaes(caopanhiaDB.getAllCaesDB());
             }
         }else{
             SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
             int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
             String token = userToken.getString(ClientMainActivity.TOKEN, "");
-            System.out.println("pedido: "+mUrlAPICaes+"caespessoais/"+id_user+"?access-token="+token);
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICaes+"caespessoais/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICaes+"/caespessoais/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     caes = CaoJsonParser.parserJasonCao(response);
                     adicionarCaoBD(caes);
 
                     if(caesListener!=null){
-                        caesListener.onRefreachListaCaes(caes);
+                        caesListener.onRefreshListaCaes(caes);
                     }
                 }
             }, new Response.ErrorListener(){
@@ -235,17 +188,60 @@ public class SingletonGestorCaopanhia {
     }
 
 
-    public void removerCaoAPI(final Cao livro, final Context context){
+    public void adicionarCaesAPI(final Cao cao, final Context context){
         if(!Utilities.isConnectionInternet(context)){
             Toast.makeText(context, "Erro: Sem ligação à internet!", Toast.LENGTH_LONG).show();
         }else{
-            StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPICaes + '/' + livro.getId(), new Response.Listener<String>() {
+            SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
+            String token = userToken.getString(ClientMainActivity.TOKEN, "");
+            StringRequest req = new StringRequest(Request.Method.POST, mUrlAPICaes+"?access-token="+token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    removerCaoDB(livro.getId());
+                    adicionarCaoBD(CaoJsonParser.parserJasonCao(response));
 
                     if(detalhesCaoListener!=null){
-                        //detalhesListener.onRefreshDetalhes(MenuMainActivity.DELETE);
+                        detalhesCaoListener.onRefreshCaoDetalhes(ClientMainActivity.ADD);
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }){
+
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params=new HashMap<>();
+                    params.put("nome", cao.getNome());
+                    params.put("anoNascimento", String.valueOf(cao.getAnoNascimento()));
+                    params.put("idUserProfile", String.valueOf(id_user));
+                    params.put("genero", cao.getGenero());
+                    params.put("microship", cao.getMicroship());
+                    params.put("castrado", cao.getCastrado());
+                    params.put("adotado", "sim");
+                    return params;
+                }
+            };
+            volleyQueue.add(req);
+        }
+    }
+
+
+    public void removerCaoAPI(final Cao cao, final Context context){
+        if(!Utilities.isConnectionInternet(context)){
+            Toast.makeText(context, "Erro: Sem ligação à internet!", Toast.LENGTH_LONG).show();
+        }else{
+            SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+            String token = userToken.getString(ClientMainActivity.TOKEN, "");
+            StringRequest req = new StringRequest(Request.Method.DELETE, mUrlAPICaes + '/' + cao.getId() + "?access-token="+token, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    removerCaoDB(cao.getId());
+
+                    if(detalhesCaoListener!=null){
+                        detalhesCaoListener.onRefreshCaoDetalhes(ClientMainActivity.DELETE);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -262,13 +258,15 @@ public class SingletonGestorCaopanhia {
         if(!Utilities.isConnectionInternet(context)){
             Toast.makeText(context, "Erro: Sem ligação à internet!", Toast.LENGTH_LONG).show();
         }else{
-            StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPICaes+'/'+cao.getId(), new Response.Listener<String>() {
+            SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+            String token = userToken.getString(ClientMainActivity.TOKEN, "");
+            StringRequest req = new StringRequest(Request.Method.PUT, mUrlAPICaes+'/'+cao.getId()+ "?access-token="+token, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     editarCaoDB(cao);
 
                     if(detalhesCaoListener!=null){
-                        //detalhesListener.onRefreshDetalhes(MenuMainActivity.EDIT);
+                        detalhesCaoListener.onRefreshCaoDetalhes(ClientMainActivity.EDIT);
                     }
                 }
             }, new Response.ErrorListener() {
@@ -281,11 +279,11 @@ public class SingletonGestorCaopanhia {
                 protected Map<String, String> getParams() {
                     Map<String, String> params=new HashMap<>();
                    // params.put("token", TOKEN);
-                    params.put("Nome", cao.getNome());
-                    params.put("Ano Nascimento", String.valueOf(cao.getAnoNascimento()));
-                    params.put("Genero", cao.getGenero());
-                    params.put("Microship", cao.getMicroship());
-                    params.put("Castrado", cao.getCastrado());
+                    params.put("nome", cao.getNome());
+                    params.put("anoNascimento", String.valueOf(cao.getAnoNascimento()));
+                    params.put("genero", cao.getGenero());
+                    params.put("microship", cao.getMicroship());
+                    params.put("castrado", cao.getCastrado());
                     return params;
                 }
             };

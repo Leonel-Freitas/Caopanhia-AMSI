@@ -23,13 +23,23 @@
                 android:layout_weight="0.2"
                 app:srcCompat="@drawable/cao_default" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_present_nome" />
+
             <EditText
                 android:id="@+id/etNome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="Nome"/>
+                android:hint="@string/txt_nome"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_present_anoNascimento" />
 
             <EditText
                 android:id="@+id/etAnoNascimento"
@@ -37,7 +47,12 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="number"
-                android:hint="Ano de nascimento"/>
+                android:hint="@string/txt_anoNascimento"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_present_genero" />
 
             <EditText
                 android:id="@+id/etGenero"
@@ -45,7 +60,12 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="Genero" />
+                android:hint="@string/txt_genero" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_present_microship" />
 
             <EditText
                 android:id="@+id/etMicroship"
@@ -53,7 +73,12 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="Microship" />
+                android:hint="@string/txt_microship" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_present_castrado" />
 
             <EditText
                 android:id="@+id/etCastrado"
@@ -61,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:hint="Castrado" />
+                android:hint="@string/txt_castrado" />
 
             <Space
                 android:layout_width="match_parent"

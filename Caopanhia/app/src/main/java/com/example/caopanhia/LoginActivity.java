@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             startActivity(intent);
             finish();
         }else{
-            Toast.makeText(this, "Não tens permmissão para entrar na aplicação", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "O utilizador inserido não possui permissão para aceder à aplicação", Toast.LENGTH_SHORT).show();
             etEmail.setText("");
             etPassword.setText("");
 
@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
 
     @Override
     public void onLoginError() {
-        Toast.makeText(this, "Credenciais erradas", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Credenciais incorretas", Toast.LENGTH_SHORT).show();
         etEmail.setText("");
         etPassword.setText("");
     }

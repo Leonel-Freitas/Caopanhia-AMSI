@@ -60,6 +60,14 @@ public class PetsListFragment extends Fragment implements CaesListener {
             }
         });
 
+        fabNewPet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), DetalhesPetActivity.class);
+                startActivityForResult(intent, ACT_DETALHES);
+            }
+        });
+
 
         SingletonGestorCaopanhia.getInstance(getContext()).setCaesListener(this);
         SingletonGestorCaopanhia.getInstance(getContext()).getAllCaesAPI(getContext());
@@ -69,7 +77,7 @@ public class PetsListFragment extends Fragment implements CaesListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent intent) {
-        if (requestCode == Activity.RESULT_OK && requestCode == ACT_DETALHES){
+        if (resultCode == Activity.RESULT_OK && requestCode == ACT_DETALHES){
             SingletonGestorCaopanhia.getInstance(getContext()).getAllCaesAPI(getContext());
             switch (intent.getIntExtra(ClientMainActivity.OPERACAO, 0)){
                 case ClientMainActivity.ADD:
@@ -88,7 +96,7 @@ public class PetsListFragment extends Fragment implements CaesListener {
 
 
     @Override
-    public void onRefreachListaCaes(ArrayList<Cao> listaCaes) {
+    public void onRefreshListaCaes(ArrayList<Cao> listaCaes) {
         if (listaCaes!=null)
             lvPets.setAdapter(new ListaCaesAdapter(getContext(), listaCaes));
     }
