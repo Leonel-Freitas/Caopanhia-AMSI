@@ -25,6 +25,7 @@
     <string name="txt_sessao">Sessão</string>
     <string name="txt_dr">Dr.</string>
     <string name="act_Nome">Detalhes:%1$s</string>
+    <string name="act_Consulta">Consulta:%1$s</string>
     <string name="txt_present_nome">Nome:</string>
     <string name="txt_nome">Nome</string>
     <string name="txt_present_anoNascimento">Ano de Nascimento:</string>
@@ -36,4 +37,14 @@
     <string name="txt_present_castrado">Castrado:</string>
     <string name="txt_castrado">Castrado</string>
     <string name="txt_default_nome_cao">NomeCao</string>
+    <string name="txt_present_date">Data: </string>
+    <string name="txt_data">Data</string>
+    <string name="txt_hora">Hora</string>
+    <string name="txt_present_hora"> Hora: </string>
+    <string name="txt_present_client">Cliente:</string>
+    <string name="txt_client">Cliente</string>
+    <string name="txt_present_vet">Veterinário:</string>
+    <string name="txt_vet">Veterinário</string>
+    <string name="txt_present_cao">Cão:</string>
+    <string name="txt_cao">Cão</string>
 </resources>

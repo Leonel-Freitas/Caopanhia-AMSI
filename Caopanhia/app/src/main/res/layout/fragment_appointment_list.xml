@@ -21,6 +21,7 @@
             android:layout_margin="15dp"/>
 
         <ListView
+            android:id="@+id/lvAppointments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

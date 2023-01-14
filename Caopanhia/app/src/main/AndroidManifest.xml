@@ -14,9 +14,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".DetalhesAppointmentActivity"
+            android:exported="false"
+            android:parentActivityName=".DetalhesAppointmentActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".DetalhesPetActivity"
-            android:parentActivityName=".DetalhesPetActivity"
-            android:exported="false">
+            android:exported="false"
+            android:parentActivityName=".DetalhesPetActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

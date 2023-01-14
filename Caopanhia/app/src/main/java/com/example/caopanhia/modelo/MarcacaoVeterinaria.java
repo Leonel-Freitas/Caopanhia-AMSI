@@ -3,14 +3,15 @@ package com.example.caopanhia.modelo;
 public class MarcacaoVeterinaria {
 
     private int id;
-    private String data, hora, vet, cao;
+    private String data, hora, nomeClient, nomeVet, nomeCao;
 
-    public MarcacaoVeterinaria(int id, String data, String hora, String vet, String cao) {
+    public MarcacaoVeterinaria(int id, String data, String hora, String nomeClient, String nomeVet, String nomeCao) {
         this.id = id;
         this.data = data;
         this.hora = hora;
-        this.vet = vet;
-        this.cao = cao;
+        this.nomeClient = nomeClient;
+        this.nomeVet = nomeVet;
+        this.nomeCao = nomeCao;
     }
 
     public int getId() {
@@ -37,19 +38,27 @@ public class MarcacaoVeterinaria {
         this.hora = hora;
     }
 
-    public String getVet() {
-        return vet;
+    public String getNomeClient() {
+        return nomeClient;
     }
 
-    public void setVet(String vet) {
-        this.vet = vet;
+    public void setNomeClient(String nomeClient) {
+        this.nomeClient = nomeClient;
     }
 
-    public String getCao() {
-        return cao;
+    public String getNomeVet() {
+        return nomeVet;
     }
 
-    public void setCao(String cao) {
-        this.cao = cao;
+    public void setNOmeVet(String nomeVet) {
+        this.nomeVet = nomeVet;
+    }
+
+    public String getNomeCao() {
+        return nomeCao;
+    }
+
+    public void setNomeCao(String nomeCao) {
+        this.nomeCao = nomeCao;
     }
 }

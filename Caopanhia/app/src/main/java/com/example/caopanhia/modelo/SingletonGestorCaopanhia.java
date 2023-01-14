@@ -17,8 +17,11 @@ import com.example.caopanhia.ClientMainActivity;
 import com.example.caopanhia.PetsListFragment;
 import com.example.caopanhia.listeners.CaesListener;
 import com.example.caopanhia.listeners.DetalhesCaoListener;
+import com.example.caopanhia.listeners.DetalhesMarcacaoListener;
 import com.example.caopanhia.listeners.LoginListener;
+import com.example.caopanhia.listeners.MarcacoesListener;
 import com.example.caopanhia.utils.CaoJsonParser;
+import com.example.caopanhia.utils.MarcacaoJsonParser;
 import com.example.caopanhia.utils.Utilities;
 import com.google.android.gms.common.internal.Objects;
 
@@ -32,16 +35,20 @@ import java.util.Map;
 
 public class SingletonGestorCaopanhia {
     private ArrayList<Cao> caes;
+    private ArrayList<MarcacaoVeterinaria> marcacoes;
     private static SingletonGestorCaopanhia instance=null;
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
     //private static String TOKEN="h-thDu-IuI4_MZ7D5iABfLvrLaEFaFMD";
     private static final String mUrlAPICaes="http://10.0.2.2/caopanhia/backend/web/api/caes",
-            mUrlAPILogin="http://10.0.2.2/caopanhia/backend/web/api/login/post";
+            mUrlAPILogin="http://10.0.2.2/caopanhia/backend/web/api/login/post",
+            mUrlAPIMarcacoes="http://10.0.2.2/caopanhia/backend/web/api/marcacoesveterinarias";
 
     private CaesListener caesListener;
     private DetalhesCaoListener detalhesCaoListener;
     private LoginListener loginListener;
+    private MarcacoesListener marcacoesListener;
+    private DetalhesMarcacaoListener detalhesMarcacaoListener;
 
     public static synchronized SingletonGestorCaopanhia getInstance(Context context){
         if(instance == null){
@@ -53,23 +60,20 @@ public class SingletonGestorCaopanhia {
 
     private SingletonGestorCaopanhia(Context context){
         caes = new ArrayList<>();
+        marcacoes = new ArrayList<>();
         caopanhiaDB = new CaopanhiaDBHelper(context);
     }
+
+
+
+
+
+
+    //region Login Na API
 
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
     }
-
-    public void setCaesListener(CaesListener caesListener){
-        this.caesListener = caesListener;
-    }
-
-    public void setDetalhesCaoListener(DetalhesCaoListener detalhesCaoListener) {
-        this.detalhesCaoListener = detalhesCaoListener;
-    }
-
-
-    //region Login Na API
 
     public void efetuarLoginAPI(String email, String  password){
             StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
@@ -108,15 +112,21 @@ public class SingletonGestorCaopanhia {
 
     //endregion
 
-
-
     //region Caes
 
+    public void setCaesListener(CaesListener caesListener){
+        this.caesListener = caesListener;
+    }
 
-      public ArrayList<Cao> CaesBD() {
+    public void setDetalhesCaoListener(DetalhesCaoListener detalhesCaoListener) {
+        this.detalhesCaoListener = detalhesCaoListener;
+    }
+
+
+    public ArrayList<Cao> CaesBD() {
          caes = caopanhiaDB.getAllCaesDB();
          return new ArrayList(caes);
-     }
+    }
 
     public Cao getCao(int id){
         for(Cao c:caes){
@@ -291,6 +301,63 @@ public class SingletonGestorCaopanhia {
         }
     }
 
+
+    //endregion
+
+    //region Marcacoes
+
+    public void setMarcacoesListener(MarcacoesListener marcacoesListener){
+        this.marcacoesListener = marcacoesListener;
+    }
+
+    public void setDetalhesMarcacaoListener(DetalhesMarcacaoListener detalhesMarcacaoListener) {
+        this.detalhesMarcacaoListener = detalhesMarcacaoListener;
+    }
+
+    public MarcacaoVeterinaria getMarcacao(int id){
+        for(MarcacaoVeterinaria m:marcacoes){
+            if(m.getId()==id){
+                return m;
+            }
+        }
+        return null;
+    }
+
+    //endregion
+
+    //region Marcacoes_API
+
+    public void getAllMarcacoesAPI(final Context context){
+        if(!Utilities.isConnectionInternet(context)){
+            Toast.makeText(context, "Sem ligação à internet!", Toast.LENGTH_LONG).show();
+
+            /* TODO Mostrar marcacoes offline
+            if(marcacoesListener!=null){
+                marcacoesListener.onRefreshListaMarcacoes(caopanhiaDB.getAllCaesDB());
+            }*/
+        }else{
+            SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
+            String token = userToken.getString(ClientMainActivity.TOKEN, "");
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIMarcacoes+"/futurasconsultas/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    marcacoes = MarcacaoJsonParser.parserJasonMarcacao(response);
+                    //adicionarCaoBD(caes); TODO Adicionar BD
+
+                    if(marcacoesListener!=null){
+                        marcacoesListener.onRefreshListaMarcacoes(marcacoes);
+                    }
+                }
+            }, new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
 
     //endregion
 }
