@@ -6,37 +6,39 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="pub"
+            android:text="Mosquito" />
 
         <Button
             android:id="@+id/btnAPI"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickJSonRequest"
-            android:text="Net" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            android:onClick="onClickJSonArrayRequest"/>
+            android:onClick="con"
+            android:text="Subscribe" />
 
 
         <Button
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
-            android:onClick="onClickLogin"/>
+            android:onClick="diconn"
+            android:text="Disconnet" />
 
         <TextView
             android:id="@+id/ApiText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Api" />
+
     </LinearLayout>
 
 
