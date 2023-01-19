@@ -43,6 +43,21 @@
         </menu>
     </item>
 
+    <item android:title="@string/txt_info">
+        <menu>
+            <item
+                android:id="@+id/navInfoCaopanhia"
+                android:title="@string/app_name"
+                android:icon="@drawable/ic_action_info"
+                />
+            <item
+                android:id="@+id/navInfoApp"
+                android:title="@string/txt_app_movel"
+                android:icon="@drawable/ic_action_app_movel"
+                />
+        </menu>
+    </item>
+
     <item android:title="@string/txt_sessao">
         <menu>
             <item

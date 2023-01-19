@@ -13,9 +13,9 @@ import com.example.caopanhia.modelo.MarcacaoVeterinaria;
 import java.util.ArrayList;
 
 public class ListaMarcacoesAdapter extends BaseAdapter {
-    private Context context;
+    private final Context context;
     private LayoutInflater inflater;
-    private ArrayList<MarcacaoVeterinaria> marcacoes;
+    private final ArrayList<MarcacaoVeterinaria> marcacoes;
 
     public ListaMarcacoesAdapter(Context context, ArrayList<MarcacaoVeterinaria> marcacoes) {
         this.context = context;
@@ -59,10 +59,11 @@ public class ListaMarcacoesAdapter extends BaseAdapter {
         return view;
     }
 
-    //TODO UPDATE
 
     private class ViewHolderLista{
-        private TextView tvNomeCao, tvData, tvHora;
+        private final TextView tvNomeCao;
+        private final TextView tvData;
+        private final TextView tvHora;
 
         public ViewHolderLista(View view){
             tvNomeCao=view.findViewById(R.id.tvNomeCao);

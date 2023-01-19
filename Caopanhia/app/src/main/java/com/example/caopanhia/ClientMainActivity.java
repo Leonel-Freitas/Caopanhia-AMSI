@@ -106,6 +106,14 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
             case R.id.navMap:
                 Toast.makeText(this, "MAPA", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.navInfoCaopanhia:
+                fragment = new InfoFragment();
+                setTitle(item.getTitle());
+                break;
+            case R.id.navInfoApp:
+                fragment = new AppInfoFragment();
+                setTitle(item.getTitle());
+                break;
             case R.id.navLogout:
 
                 SharedPreferences userToken = getSharedPreferences(SHARED, Context.MODE_PRIVATE);

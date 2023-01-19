@@ -17,11 +17,15 @@ import com.example.caopanhia.ClientMainActivity;
 import com.example.caopanhia.PetsListFragment;
 import com.example.caopanhia.listeners.CaesListener;
 import com.example.caopanhia.listeners.DetalhesCaoListener;
+import com.example.caopanhia.listeners.DetalhesEncomendaListener;
 import com.example.caopanhia.listeners.DetalhesMarcacaoListener;
+import com.example.caopanhia.listeners.EncomendasListener;
 import com.example.caopanhia.listeners.LoginListener;
 import com.example.caopanhia.listeners.MarcacoesListener;
 import com.example.caopanhia.utils.CaoJsonParser;
+import com.example.caopanhia.utils.EncomendaJsonParser;
 import com.example.caopanhia.utils.MarcacaoJsonParser;
+import com.example.caopanhia.utils.UserJsonParser;
 import com.example.caopanhia.utils.Utilities;
 import com.google.android.gms.common.internal.Objects;
 
@@ -36,19 +40,24 @@ import java.util.Map;
 public class SingletonGestorCaopanhia {
     private ArrayList<Cao> caes;
     private ArrayList<MarcacaoVeterinaria> marcacoes;
+    private ArrayList<Encomenda> encomendas;
+    private ArrayList<User> users;
     private static SingletonGestorCaopanhia instance=null;
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
     //private static String TOKEN="h-thDu-IuI4_MZ7D5iABfLvrLaEFaFMD";
     private static final String mUrlAPICaes="http://10.0.2.2/caopanhia/backend/web/api/caes",
             mUrlAPILogin="http://10.0.2.2/caopanhia/backend/web/api/login/post",
-            mUrlAPIMarcacoes="http://10.0.2.2/caopanhia/backend/web/api/marcacoesveterinarias";
+            mUrlAPIMarcacoes="http://10.0.2.2/caopanhia/backend/web/api/marcacoesveterinarias",
+            mUrlAPIEncomendas="http://10.0.2.2/caopanhia/backend/web/api/encomendas";
 
     private CaesListener caesListener;
     private DetalhesCaoListener detalhesCaoListener;
     private LoginListener loginListener;
     private MarcacoesListener marcacoesListener;
     private DetalhesMarcacaoListener detalhesMarcacaoListener;
+    private EncomendasListener encomendasListener;
+    private DetalhesEncomendaListener detalhesEncomendaListener;
 
     public static synchronized SingletonGestorCaopanhia getInstance(Context context){
         if(instance == null){
@@ -69,24 +78,67 @@ public class SingletonGestorCaopanhia {
 
 
 
-    //region Login Na API
+    //region Login
 
     public void setLoginListener(LoginListener loginListener) {
         this.loginListener = loginListener;
     }
 
-    public void efetuarLoginAPI(String email, String  password){
+    public User getUserBD(String email, String password){
+        users = caopanhiaDB.getAllUsersDB();
+        for(User u:users){
+            if(u.getEmail().equals(email)){
+                if (u.getPassword().equals(password)){
+                    return u;
+                }
+            }
+        }
+        return null;
+    }
+
+    public User getUserById(int id){
+        users = caopanhiaDB.getAllUsersDB();
+        for(User u:users){
+            if(u.getId()==id){
+                return u;
+            }
+        }
+        return null;
+    }
+
+    public void adicionarUserBD(User user){
+        caopanhiaDB.adicionarUserDB(user);
+    }
+
+    public void efetuarLoginAPI(String email, String  password, final Context context){
+        if(!Utilities.isConnectionInternet(context)){
+
+            User userLogged = getUserBD(email, password);
+            if (userLogged != null){
+                loginListener.onLoginSuccess(userLogged.getToken(), userLogged.getRole(), userLogged.getUsername(), userLogged.getId());
+            }else{
+                Toast.makeText(context, "Ligue-se à internet para realizar login", Toast.LENGTH_LONG).show();
+                loginListener.onLoginError();
+            }
+        }else{
             StringRequest request = new StringRequest(Request.Method.POST, mUrlAPILogin, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                   try {
+                    try {
                         JSONObject json = new JSONObject(response);
                         String token = json.getString("token");
                         String role = json.getString("role");
                         String username = json.getString("username");
                         int id_user = json.getInt("id_user");
+
+                        if(getUserById(id_user) != null){
+                            caopanhiaDB.removerUserDB(id_user);
+                        }
+                        //User user = new User(id_user, username, password, email, role, token);
+                        adicionarUserBD(UserJsonParser.parserJasonUser(response, email, password));
+
                         if(loginListener!=null){
-                        loginListener.onLoginSuccess(token, role, username, id_user);
+                            loginListener.onLoginSuccess(token, role, username, id_user);
                         }
                     } catch (JSONException e) {
                         loginListener.onLoginError();
@@ -108,7 +160,9 @@ public class SingletonGestorCaopanhia {
                 }
             };
             volleyQueue.add(request);
-            }
+        }
+
+    }
 
     //endregion
 
@@ -138,7 +192,7 @@ public class SingletonGestorCaopanhia {
     }
 
 
-    public void adicionarCaoBD(ArrayList<Cao> Caes){
+    public void adicionarCaesBD(ArrayList<Cao> Caes){
         caopanhiaDB.removerAllCaesDB();
         for(Cao c :caes) {
             adicionarCaoBD(c);
@@ -171,6 +225,7 @@ public class SingletonGestorCaopanhia {
             Toast.makeText(context, "Sem ligação à internet!", Toast.LENGTH_LONG).show();
 
             if(caesListener!=null){
+                caes = caopanhiaDB.getAllCaesDB();
                 caesListener.onRefreshListaCaes(caopanhiaDB.getAllCaesDB());
             }
         }else{
@@ -181,7 +236,7 @@ public class SingletonGestorCaopanhia {
                 @Override
                 public void onResponse(JSONArray response) {
                     caes = CaoJsonParser.parserJasonCao(response);
-                    adicionarCaoBD(caes);
+                    adicionarCaesBD(caes);
 
                     if(caesListener!=null){
                         caesListener.onRefreshListaCaes(caes);
@@ -288,7 +343,6 @@ public class SingletonGestorCaopanhia {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params=new HashMap<>();
-                   // params.put("token", TOKEN);
                     params.put("nome", cao.getNome());
                     params.put("anoNascimento", String.valueOf(cao.getAnoNascimento()));
                     params.put("genero", cao.getGenero());
@@ -323,6 +377,17 @@ public class SingletonGestorCaopanhia {
         return null;
     }
 
+    public void adicionarMarcacaoBD(MarcacaoVeterinaria m){
+        caopanhiaDB.adicionarMarcacaoDB(m);
+    }
+
+    public void adicionarMarcacoesBD(ArrayList<MarcacaoVeterinaria> marcacoes){
+        caopanhiaDB.removerAllMarcacoesDB();
+        for(MarcacaoVeterinaria m :marcacoes) {
+            adicionarMarcacaoBD(m);
+        }
+    }
+
     //endregion
 
     //region Marcacoes_API
@@ -331,10 +396,10 @@ public class SingletonGestorCaopanhia {
         if(!Utilities.isConnectionInternet(context)){
             Toast.makeText(context, "Sem ligação à internet!", Toast.LENGTH_LONG).show();
 
-            /* TODO Mostrar marcacoes offline
             if(marcacoesListener!=null){
-                marcacoesListener.onRefreshListaMarcacoes(caopanhiaDB.getAllCaesDB());
-            }*/
+                marcacoes = caopanhiaDB.getAllMarcacoesDB();
+                marcacoesListener.onRefreshListaMarcacoes(caopanhiaDB.getAllMarcacoesDB());
+            }
         }else{
             SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
             int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
@@ -343,10 +408,62 @@ public class SingletonGestorCaopanhia {
                 @Override
                 public void onResponse(JSONArray response) {
                     marcacoes = MarcacaoJsonParser.parserJasonMarcacao(response);
-                    //adicionarCaoBD(caes); TODO Adicionar BD
+                    adicionarMarcacoesBD(marcacoes);
 
                     if(marcacoesListener!=null){
                         marcacoesListener.onRefreshListaMarcacoes(marcacoes);
+                    }
+                }
+            }, new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+            volleyQueue.add(req);
+        }
+    }
+
+    //endregion
+
+    //region Encomendas
+
+    public void setEncomendasListener(EncomendasListener encomendasListener){
+        this.encomendasListener = encomendasListener;
+    }
+
+    public void setDetalhesEncomendasListener(DetalhesEncomendaListener detalhesEncomendasListener) {
+        this.detalhesEncomendaListener = detalhesEncomendasListener;
+    }
+
+    public Encomenda getEncomenda(int id){
+        for(Encomenda e:encomendas){
+            if(e.getId()==id){
+                return e;
+            }
+        }
+        return null;
+    }
+
+    //endregion
+
+    //region EncomendasAPI
+
+    public void getAllEncomendasAPI(final Context context){
+        if(!Utilities.isConnectionInternet(context)){
+            Toast.makeText(context, "Sem ligação à internet!", Toast.LENGTH_LONG).show();
+
+        }else{
+            SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
+            String token = userToken.getString(ClientMainActivity.TOKEN, "");
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIEncomendas+"/historico/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    encomendas = EncomendaJsonParser.parserJasonEncomenda(response);
+
+                    if(encomendasListener!=null){
+                        encomendasListener.onRefreshListaEncomendas(encomendas);
                     }
                 }
             }, new Response.ErrorListener(){

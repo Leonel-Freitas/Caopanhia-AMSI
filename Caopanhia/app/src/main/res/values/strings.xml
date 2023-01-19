@@ -1,6 +1,6 @@
 <resources>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="app_name">Caopanhia</string>
+    <string name="app_name">Cãopanhia</string>
     <string name="txt_email_login">Insira o seu email</string>
     <string name="txt_password_login">Insira a sua palavra chave</string>
     <string name="txt_entrar_login">Entrar</string>
@@ -16,7 +16,7 @@
     <string name="txt_encomendas_pessoais">Minhas encomendas:</string>
     <string name="txt_caes_pessoais">Meus cães:</string>
     <string name="txt_menu_pagina_inicial">Página Inicial</string>
-    <string name="txt_opcoes">Opções</string>
+    <string name="txt_opcoes">Consultar</string>
     <string name="txt_menu_caes">Meus cães</string>
     <string name="txt_menu_consultas">Minhas consultas</string>
     <string name="txt_menu_encomendas">Minhas encomendas</string>
@@ -26,6 +26,7 @@
     <string name="txt_dr">Dr.</string>
     <string name="act_Nome">Detalhes:%1$s</string>
     <string name="act_Consulta">Consulta:%1$s</string>
+    <string name="act_Encomenda">Encomenda:%1$s</string>
     <string name="txt_present_nome">Nome:</string>
     <string name="txt_nome">Nome</string>
     <string name="txt_present_anoNascimento">Ano de Nascimento:</string>
@@ -47,4 +48,39 @@
     <string name="txt_vet">Veterinário</string>
     <string name="txt_present_cao">Cão:</string>
     <string name="txt_cao">Cão</string>
+    <string name="txt_present_package">Encomenda:</string>
+    <string name="txt_package_number">#Numero</string>
+    <string name="txt_numero_encomenda">#Numero</string>
+    <string name="txt_present_numero_encomenda">Numero de encomenda:</string>
+    <string name="txt_present_valor_pago">Valor total pago:</string>
+    <string name="txt_valor_pago">ValorTotalPago</string>
+    <string name="txt_present_estado">Estado:</string>
+    <string name="txt_estado">Estado</string>
+    <string name="txt_info">Informações</string>
+    <string name="txt_app_movel">Aplicação Móvel</string>
+    <string name="txt_sobre">Sobre</string>
+    <string name="txt_nos">Nós</string>
+    <string name="txt_o_que_e_caopanhia">A Cãopanhia é um sistema on-line com a finalidade de facilitar a adoção de cães através de anúncios bem estruturados. Qualquer utilizador poderá criar anúncios e/ou responder a anúncios já criados por outro utilizador.</string>
+    <string name="txt_nossa_missao">A nossa missão:</string>
+    <string name="txt_missao_caopanhia">A nossa missão será diminuir o abandono de animais nomeadamente cães com a nosso sistema de anuncios e com veterinarios prontos para acudir conseguiremos cuidar e tratar o seu animal de estimação</string>
+    <string name="txt_nossa_visao">A nossa visão:</string>
+    <string name="txt_visao_caopanhia">Ver um animal abandonado é triste e queremos ajudar o maior numero possivel de cães para que eles possam saborear a vida e ter um dono que consiga cuidar dele para serem melhores amigos durante anos.</string>
+    <string name="txt_ajude_nos">Ajude-nos</string>
+    <string name="txt_ajude_caopanhia">A cãopanhia e a sua equipa agradece do fundo do coração qualquer doação de artigos ou dinheiro que queira realizar. Toda e qualquer ajuda é bem vinda!</string>
+    <string name="txt_doacao_monetaria">Doação monetária</string>
+    <string name="txt_doacao_monetaria_desc">A doação monetária pode ser realizada através de:</string>
+    <string name="txt_mbway">- MB Way: 912345678</string>
+    <string name="txt_iban">- IBAN: PT50 0018 0008 0617 2554 0201 4</string>
+    <string name="txt_doacao_bens">Doação de bens</string>
+    <string name="txt_doacao_bens_desc">A doação de bens pode ser realizada na nossa sede ou num local a combinar através do nosso email.</string>
+    <string name="txt_racao">- Ração;</string>
+    <string name="txt_cobertores">- Cobertores;</string>
+    <string name="txt_primeiros_socorros">- Primeiros-socorros</string>
+    <string name="txt_app">App</string>
+    <string name="txt_movel">Móvel</string>
+    <string name="txt_objetivo_app">A aplicação móvel foca-se em ti! O grande objetivo da nossa aplicação é permitir ao utilizador que faça a gestão de todos os seus cães! Acrescentando ainda a possibilidade de consultar as suas futuras consultas e o seu histórico de encomendas, tudo isto à distância do seu telemóvel pessoal!</string>
+    <string name="txt_funcionalidades">Funcionalidades</string>
+    <string name="txt_funcionalidades_desc">A nossa aplicação móvel oferece-lhe bastantes opções. Como já referido é possivel fazer toda a gestão dos seus animais, isto é, pode consultar os seus cães e visualizar os seus detalhes, pode adicionar cães, editar os seus dados e até mesmo apagar um cão. Pode ainda consultar as suas futuras consultas assim como o seu histórico de encomendas. Acrescentando a isto tudo, tem ainda a possibilidade de consultar um mapa que lhe mostrará os serviços pertos de si!</string>
+    <string name="txt_no_internet">Sem ligação à internet</string>
+    <string name="txt_no_internet_desc">Para a aplicação funcionar na sua totalidade é necessário o acesso à internet. No entanto a Cãopanhia oferece algumas funcionalidades mesmo não estando conectado à internet. Sem internet é possivel fazer o login normalmente, desde que já tenha feito o login pelo menos uma vez ligado à internet. É ainda possível consultar a sua lista de cães assim como visualizar os seus detalhes. O mesomo funciona com as suas marcações veterinárias</string>
 </resources>

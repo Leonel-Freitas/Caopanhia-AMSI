@@ -57,14 +57,8 @@ public class LoginActivity extends AppCompatActivity implements LoginListener {
             etPassword.setError("Password Inválida");
         }
 
-        if(!Utilities.isConnectionInternet(getApplicationContext())){
-            Toast.makeText(getApplicationContext(), "Erro: Sem ligação à internet!", Toast.LENGTH_LONG).show();
-        }else {
-            SingletonGestorCaopanhia.getInstance(getApplicationContext()).efetuarLoginAPI(email, password);
-        }
 
-
-
+        SingletonGestorCaopanhia.getInstance(getApplicationContext()).efetuarLoginAPI(email, password, this);
 
     }
 

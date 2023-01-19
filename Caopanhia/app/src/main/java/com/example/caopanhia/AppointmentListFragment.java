@@ -32,7 +32,7 @@ public class AppointmentListFragment extends Fragment implements MarcacoesListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        View view =  inflater.inflate(R.layout.fragment_appointment_list, container, false);
-        setHasOptionsMenu(true);
+       setHasOptionsMenu(true);
 
         lvAppointments = view.findViewById(R.id.lvAppointments);
 

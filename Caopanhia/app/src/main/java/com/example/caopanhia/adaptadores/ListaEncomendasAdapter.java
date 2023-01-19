@@ -5,37 +5,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.caopanhia.R;
-import com.example.caopanhia.modelo.Cao;
+import com.example.caopanhia.modelo.Encomenda;
+import com.example.caopanhia.modelo.MarcacaoVeterinaria;
 
 import java.util.ArrayList;
 
-public class ListaCaesAdapter extends BaseAdapter {
+public class ListaEncomendasAdapter extends BaseAdapter {
     private final Context context;
     private LayoutInflater inflater;
-    private final ArrayList<Cao> caes;
+    private final ArrayList<Encomenda> encomendas;
 
-    public ListaCaesAdapter(Context context, ArrayList<Cao> caes) {
+    public ListaEncomendasAdapter(Context context, ArrayList<Encomenda> encomendas) {
         this.context = context;
-        this.caes = caes;
+        this.encomendas = encomendas;
     }
 
     @Override
     public int getCount() {
-        return caes.size();
+        return encomendas.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return caes.get(i);
+        return encomendas.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return caes.get(i).getId();
+        return encomendas.get(i).getId();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ListaCaesAdapter extends BaseAdapter {
         }
 
         if(view == null){
-            view = inflater.inflate(R.layout.item_lista_caes, null);
+            view = inflater.inflate(R.layout.item_lista_encomendas, null);
         }
 
 
@@ -55,23 +55,25 @@ public class ListaCaesAdapter extends BaseAdapter {
             view.setTag(viewHolder);
         }
 
-        viewHolder.update(caes.get(i));
+        viewHolder.update(encomendas.get(i));
 
         return view;
     }
 
+    //TODO UPDATE
+
     private class ViewHolderLista{
-        private final TextView tvNome;
-        private final TextView tvAnoNascimento;
+        private final TextView tvNumeroEncomenda;
+        private final TextView tvData;
 
         public ViewHolderLista(View view){
-            tvNome=view.findViewById(R.id.tvNomeCao);
-            tvAnoNascimento=view.findViewById(R.id.tvAnoNascimento);
+            tvNumeroEncomenda=view.findViewById(R.id.tvNumeroEncomenda);
+            tvData=view.findViewById(R.id.tvData);
         }
 
-        public void update(Cao cao){
-            tvNome.setText(cao.getNome());
-            tvAnoNascimento.setText(cao.getAnoNascimento()+"");
+        public void update(Encomenda encomenda){
+            tvNumeroEncomenda.setText("#"+encomenda.getId());
+            tvData.setText(encomenda.getData());
         }
     }
 }
