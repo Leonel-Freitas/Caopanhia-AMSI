@@ -129,12 +129,12 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_CAES, ID+"=?",  new String[]{String.valueOf(cao.getId())})==1;
     }
 
-    public void removerAllCaesDB()
+    public void removerAllCaesDB(int id_user)
     {
-        db.delete(TABLE_CAES, null, null);
+        db.delete(TABLE_CAES, ID_USER_PROFILE+"="+id_user, null);
     }
 
-    public ArrayList<Cao> getAllCaesDB()
+    public ArrayList<Cao> getAllCaesDB(int idUser)
     {
         ArrayList<Cao> caes = new ArrayList<>();
 
@@ -146,7 +146,9 @@ public class CaopanhiaDBHelper extends SQLiteOpenHelper {
             do {
                 Cao caoAux = new Cao(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2), cursor.getString(3), cursor.getString(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
 
-                 caes.add(caoAux);
+                if (caoAux.getIdUserProfile() == idUser){
+                    caes.add(caoAux);
+                }
             }while(cursor.moveToNext());
             cursor.close();
         }

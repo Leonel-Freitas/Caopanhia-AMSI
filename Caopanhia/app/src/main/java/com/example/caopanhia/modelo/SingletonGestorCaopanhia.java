@@ -177,11 +177,6 @@ public class SingletonGestorCaopanhia {
     }
 
 
-    public ArrayList<Cao> CaesBD() {
-         caes = caopanhiaDB.getAllCaesDB();
-         return new ArrayList(caes);
-    }
-
     public Cao getCao(int id){
         for(Cao c:caes){
             if(c.getId()==id){
@@ -192,8 +187,8 @@ public class SingletonGestorCaopanhia {
     }
 
 
-    public void adicionarCaesBD(ArrayList<Cao> Caes){
-        caopanhiaDB.removerAllCaesDB();
+    public void adicionarCaesBD(ArrayList<Cao> caes, int id_user){
+        caopanhiaDB.removerAllCaesDB(id_user);
         for(Cao c :caes) {
             adicionarCaoBD(c);
         }
@@ -225,8 +220,10 @@ public class SingletonGestorCaopanhia {
             Toast.makeText(context, "Sem ligação à internet!", Toast.LENGTH_LONG).show();
 
             if(caesListener!=null){
-                caes = caopanhiaDB.getAllCaesDB();
-                caesListener.onRefreshListaCaes(caopanhiaDB.getAllCaesDB());
+                SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
+                int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
+                caes = caopanhiaDB.getAllCaesDB(id_user);
+                caesListener.onRefreshListaCaes(caopanhiaDB.getAllCaesDB(id_user));
             }
         }else{
             SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
@@ -236,7 +233,7 @@ public class SingletonGestorCaopanhia {
                 @Override
                 public void onResponse(JSONArray response) {
                     caes = CaoJsonParser.parserJasonCao(response);
-                    adicionarCaesBD(caes);
+                    adicionarCaesBD(caes, id_user);
 
                     if(caesListener!=null){
                         caesListener.onRefreshListaCaes(caes);
