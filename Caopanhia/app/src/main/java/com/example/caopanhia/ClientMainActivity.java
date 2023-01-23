@@ -51,7 +51,6 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
     public static final int ADD = 10, EDIT = 20, DELETE = 30;
     RequestQueue requestQueue;
     MqttAndroidClient client;
-    static String MQTTHOST = "tcp://192.168.1.103:1883";
     static String topicStr = "testeAndroid";
     Vibrator vibrator;
     Ringtone myRingtone;
@@ -89,7 +88,7 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
         fragmentManager = getSupportFragmentManager();
         loadHomeFragment();
 
-        SingletonGestorCaopanhia.getInstance(getApplicationContext()).getAllMarcacoesAPI(this);
+
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         myRingtone = RingtoneManager.getRingtone(this.getApplicationContext(), uri);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
@@ -105,7 +104,6 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     // We are connected
-                    Toast.makeText(ClientMainActivity.this, "connected mqqt", Toast.LENGTH_LONG).show();
                     Subscribe();
                 }
 
@@ -113,12 +111,13 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     // Something went wrong e.g. connection timeout or firewall problems
-                    Toast.makeText(ClientMainActivity.this, "connection failed", Toast.LENGTH_LONG).show();
+
 
                 }
             });
         } catch (MqttException e) {
-            e.printStackTrace();
+        e.printStackTrace();
+
         }
 
         client.setCallback(new MqttCallback() {
@@ -129,7 +128,7 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-                System.out.println("MESAGEM IMPORTANTEEEEEEEEEEEEEEEEE" + message);
+
                 Toast.makeText(ClientMainActivity.this, message.toString(), Toast.LENGTH_LONG).show();
 
                 vibrator.vibrate(500);
@@ -147,6 +146,7 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
     public void Subscribe() {
         try {
             client.subscribe(topicStr, 0);
+            SingletonGestorCaopanhia.getInstance(getApplicationContext()).getAllMarcacoesAPI(this);
         }catch (MqttException e){
             e.printStackTrace();
         }

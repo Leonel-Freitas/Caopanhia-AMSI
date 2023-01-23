@@ -232,6 +232,7 @@ public class SingletonGestorCaopanhia {
                 @Override
                 public void onResponse(JSONArray response) {
                     caes = CaoJsonParser.parserJasonCao(response);
+                    int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
                     adicionarCaesBD(caes, id_user);
 
                     if(caesListener!=null){
@@ -412,7 +413,7 @@ public class SingletonGestorCaopanhia {
             }, new Response.ErrorListener(){
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+
                 }
             });
             volleyQueue.add(req);
