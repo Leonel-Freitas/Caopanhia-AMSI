@@ -12,14 +12,31 @@ import androidx.fragment.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.example.caopanhia.modelo.SingletonGestorCaopanhia;
 import com.google.android.material.navigation.NavigationView;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class ClientMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -32,6 +49,12 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
     public static final String ID_USER = "ID_USER";
     public static final String OPERACAO = "OPERACAO";
     public static final int ADD = 10, EDIT = 20, DELETE = 30;
+    RequestQueue requestQueue;
+    MqttAndroidClient client;
+    static String MQTTHOST = "tcp://192.168.1.103:1883";
+    static String topicStr = "testeAndroid";
+    Vibrator vibrator;
+    Ringtone myRingtone;
 
 
     @Override
@@ -65,6 +88,68 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
         navigationView.setNavigationItemSelectedListener(this);
         fragmentManager = getSupportFragmentManager();
         loadHomeFragment();
+
+        SingletonGestorCaopanhia.getInstance(getApplicationContext()).getAllMarcacoesAPI(this);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        myRingtone = RingtoneManager.getRingtone(this.getApplicationContext(), uri);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        requestQueue = Volley.newRequestQueue(this);
+        String clientId = MqttClient.generateClientId();
+        // client = new MqttAndroidClient(this.getApplicationContext(), MQTTHOST,clientId);
+        client =
+                new MqttAndroidClient(this.getApplicationContext(), "tcp://broker.mqttdashboard.com:1883",
+                        clientId);
+        try {
+            IMqttToken tokenmqtt = client.connect();
+            tokenmqtt.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    // We are connected
+                    Toast.makeText(ClientMainActivity.this, "connected mqqt", Toast.LENGTH_LONG).show();
+                    Subscribe();
+                }
+
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    // Something went wrong e.g. connection timeout or firewall problems
+                    Toast.makeText(ClientMainActivity.this, "connection failed", Toast.LENGTH_LONG).show();
+
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
+        client.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                System.out.println("MESAGEM IMPORTANTEEEEEEEEEEEEEEEEE" + message);
+                Toast.makeText(ClientMainActivity.this, message.toString(), Toast.LENGTH_LONG).show();
+
+                vibrator.vibrate(500);
+
+                myRingtone.play();
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+    }
+
+    public void Subscribe() {
+        try {
+            client.subscribe(topicStr, 0);
+        }catch (MqttException e){
+            e.printStackTrace();
+        }
     }
 
     private void carregarCabecalho(){
@@ -104,7 +189,8 @@ public class ClientMainActivity extends AppCompatActivity implements NavigationV
                 setTitle(item.getTitle());
                 break;
             case R.id.navMap:
-                Toast.makeText(this, "MAPA", Toast.LENGTH_SHORT).show();
+                fragment = new MapsFragment();
+                setTitle(item.getTitle());
                 break;
             case R.id.navInfoCaopanhia:
                 fragment = new InfoFragment();

@@ -46,10 +46,10 @@ public class SingletonGestorCaopanhia {
     private static RequestQueue volleyQueue=null;
     private CaopanhiaDBHelper caopanhiaDB = null;
     //private static String TOKEN="h-thDu-IuI4_MZ7D5iABfLvrLaEFaFMD";
-    private static final String mUrlAPICaes="http://10.0.2.2/caopanhia/backend/web/api/caes",
-            mUrlAPILogin="http://10.0.2.2/caopanhia/backend/web/api/login/post",
-            mUrlAPIMarcacoes="http://10.0.2.2/caopanhia/backend/web/api/marcacoesveterinarias",
-            mUrlAPIEncomendas="http://10.0.2.2/caopanhia/backend/web/api/encomendas";
+    private static final String mUrlAPICaes="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/caes",
+            mUrlAPILogin="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/login/post",
+            mUrlAPIMarcacoes="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/marcacoesveterinarias",
+            mUrlAPIEncomendas="http://10.0.2.2/Caopanhia-PLSI-SIS/caopanhia/backend/web/api/encomendas";
 
     private CaesListener caesListener;
     private DetalhesCaoListener detalhesCaoListener;
@@ -230,9 +230,8 @@ public class SingletonGestorCaopanhia {
             }
         }else{
             SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
-            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
             String token = userToken.getString(ClientMainActivity.TOKEN, "");
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICaes+"/caespessoais/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPICaes+"/caespessoais/?access-token="+token, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     caes = CaoJsonParser.parserJasonCao(response);
@@ -402,9 +401,8 @@ public class SingletonGestorCaopanhia {
             }
         }else{
             SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
-            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
             String token = userToken.getString(ClientMainActivity.TOKEN, "");
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIMarcacoes+"/futurasconsultas/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIMarcacoes+"/futurasconsultas/?access-token="+token, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     marcacoes = MarcacaoJsonParser.parserJasonMarcacao(response);
@@ -455,9 +453,8 @@ public class SingletonGestorCaopanhia {
 
         }else{
             SharedPreferences userToken = context.getSharedPreferences(ClientMainActivity.SHARED, Context.MODE_PRIVATE);
-            int id_user = userToken.getInt(ClientMainActivity.ID_USER, 0);
             String token = userToken.getString(ClientMainActivity.TOKEN, "");
-            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIEncomendas+"/historico/"+id_user+"?access-token="+token, null, new Response.Listener<JSONArray>() {
+            JsonArrayRequest req = new JsonArrayRequest(Request.Method.GET, mUrlAPIEncomendas+"/historico/?access-token="+token, null, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     encomendas = EncomendaJsonParser.parserJasonEncomenda(response);
